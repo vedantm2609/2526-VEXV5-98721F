@@ -1,13 +1,15 @@
-# VEX V5 Robot Control System - LemLib Implementation
+# 98721F Robot - Hardware and Sofware System Code
 
-This project is a comprehensive robot control system built for VEX V5 robotics using the LemLib library for advanced chassis control and odometry.
+This code file is the official code ran on the 98721F robot. It includes all robot configurations for the mechanisms and systems ran on the robot.
+Multiple code files are being used for autonomous routes, as one autonomous path is only being used on each project. 
 
 ## Robot Hardware Configuration
 
 ### Drivetrain
-- **Wheels**: 4 Omniwheel + 4 Traction wheels (3.25" diameter)
-- **Motors**: 4 VEX 11W Smart Motors with blue cartridges (600 RPM)
-- **Additional Motors**: 2 VEX 5.5W Smart Motors at 200 RPM
+
+The Drivetrain is the driving base of the robot. It allows for the functioning of moving around the field. All design choices have been made to driver preferance and matchup goals. 
+- **Wheels**: 4 Omniwheel + 2 Traction wheels (3.25" diameter)
+- **Motors**: 6 VEX 11W Smart Motors with blue cartridges (600 RPM)
 - **Drive Modes**: Supports Arcade, Curvature, and Tank drive
 - **No deadzone implementation** for maximum sensitivity
 
@@ -16,16 +18,24 @@ This project is a comprehensive robot control system built for VEX V5 robotics u
   - `chainHoist1` (Port 12): Primary hoist motor
   - `chainHoist2` (Port 18): Secondary hoist motor  
   - `chainHoist3` (Port 6): Directional control motor
+  - `chainHoist1` is a full 11W VEX Smart Motor
+  - `chainHoist2` and `chainHoist3 ` are each 5.5W VEX Smart Motors
+ 
+- The Chain Hoist is able to move blocks from the ground to the desired scoring position at ease due to it's simplicity and structure. 
 
-### Pneumatics
-- Helper intake pneumatics (Port A)
-- Flap pneumatic system (Port B)
+
 
 ### Sensors
-- IMU on Port 7 for heading tracking
-- Horizontal rotation sensor (Port 10) 
-- Vertical rotation sensor (Port 19)
-- AI Vision sensor (Port 13)
+
+The sensors used on the robot are to accomplish two goals as follows:
+  - Have a comprehensive Odometry system that can track and follow the position of the robot. (**accomplished by the IMU, Horizontal and Vertical Rotation sensor**)
+  - Have a color sorting system to sort out unwanted blocks (opposite alliance) to maximize scoring and efficiency. (**AI Vision Sensor**)
+
+Port Numbers:
+  - **IMU** on Port 7 for heading tracking
+  - **Horizontal rotation sensor** (Port 10) 
+  - **Vertical rotation sensor** (Port 19)
+  - **AI Vision sensor** (Port 13)
 
 ## Control Scheme
 
