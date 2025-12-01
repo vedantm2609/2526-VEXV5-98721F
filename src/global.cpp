@@ -21,15 +21,16 @@ namespace robot {
 namespace globals {
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-    pros::Motor RightFront(2, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
-    pros::Motor RightBack(1, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+    pros::Motor RightFront(1, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+    pros::Motor RightBack(2, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
     pros::Motor LeftFront(-3, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
     pros::Motor LeftBack(-4, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
-    
+    pros::Motor RightMiddle(5, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+    pros::Motor LeftMiddle(-6, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
     // Set brake modes to prevent coasting/drift
    
-    pros::MotorGroup driveRight({RightFront.get_port(), RightBack.get_port()}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::rotations);
-    pros::MotorGroup driveLeft({LeftFront.get_port(), LeftBack.get_port()}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::rotations);
+    pros::MotorGroup driveRight({RightFront.get_port(), RightBack.get_port(), RightMiddle.get_port()}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::rotations);
+    pros::MotorGroup driveLeft({LeftFront.get_port(), LeftBack.get_port(), LeftMiddle.get_port()}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::rotations);
 
     pros::adi::Pneumatics helperIntake1('a', false);
     pros::adi::Pneumatics helperIntake2('a', false);

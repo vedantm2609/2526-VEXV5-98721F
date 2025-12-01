@@ -61,14 +61,9 @@ namespace robot {
         
         void start();
 
-        /**
-         * @brief Runs all mechanisms with boost voltage.
-         * 
-         * This function runs all the mechanisms of the subsystems 
-         * with maximum voltage (boostVoltage) for enhanced performance.
-         * Use with caution as this applies maximum power to all motors.
-         */
         void boost();
+
+
 
         void run();
         

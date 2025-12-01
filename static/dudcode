@@ -1,0 +1,206 @@
+/**namespace robot {
+namespace globals {
+    // ... existing code ...
+    
+    // Adaptive Velocity Controller
+    struct AdaptiveVelocityController {
+        // Base velocity limits (RPM)
+        double driveBaseVelocity = 400.0;
+        double subsystemBaseVelocity = 100.0;
+        
+        // Current adaptive velocities
+        double currentDriveVelocity = 400.0;
+        double currentSubsystemVelocity = 100.0;
+        
+        // Demand-based modifiers
+        double precisionModifier = 0.5;    // Slow mode multiplier
+        double sportModifier = 1.5;        // Fast mode multiplier
+        double autonomousModifier = 0.75;  // Conservative auto mode
+        
+        // Temperature protection
+        double tempReductionThreshold = 55.0; // °C
+        double tempReductionFactor = 0.7;
+        
+        // Battery compensation
+        double nominalVoltage = 12.0;
+        double minVoltage = 10.0;
+        
+        // Current mode
+        enum VelocityMode {
+            NORMAL,
+            PRECISION,
+            SPORT,
+            AUTONOMOUS,
+            TEMPERATURE_LIMITED
+        } currentMode = NORMAL;
+        
+        // Demand detection
+        bool highDemandDetected = false;
+        double demandThreshold = 0.8; // 80% stick input threshold
+        
+        // Methods
+        void updateVelocityLimits();
+        void setMode(VelocityMode mode);
+        double getDriveVelocity();
+        double getSubsystemVelocity();
+        void detectDemand();
+        void compensateForBattery();
+        void checkTemperature();
+    };
+    
+    extern AdaptiveVelocityController velocityController;
+    extern bool useAdaptiveVelocity;
+}
+}
+
+// In adatpive.cpp
+#include "globals.h"
+#include <algorithm>
+#include <cmath>
+
+using namespace robot::globals;
+
+AdaptiveVelocityController velocityController;
+bool useAdaptiveVelocity = true;
+
+void AdaptiveVelocityController::updateVelocityLimits() {
+    if (!useAdaptiveVelocity) return;
+    
+    // Start with base velocity
+    double driveMultiplier = 1.0;
+    double subsystemMultiplier = 1.0;
+    
+    // Apply mode-based modifiers
+    switch (currentMode) {
+        case PRECISION:
+            driveMultiplier *= precisionModifier;
+            subsystemMultiplier *= precisionModifier;
+            break;
+        case SPORT:
+            driveMultiplier *= sportModifier;
+            subsystemMultiplier *= sportModifier;
+            break;
+        case AUTONOMOUS:
+            driveMultiplier *= autonomousModifier;
+            subsystemMultiplier *= autonomousModifier;
+            break;
+        case TEMPERATURE_LIMITED:
+            driveMultiplier *= tempReductionFactor;
+            subsystemMultiplier *= tempReductionFactor;
+            break;
+        default:
+            break;
+    }
+    
+    // Apply demand-based scaling
+    if (highDemandDetected && currentMode == NORMAL) {
+        driveMultiplier *= 1.2; // 20% boost for high demand
+    }
+    
+    // Battery compensation
+    compensateForBattery();
+    double batteryFactor = std::max(0.5, pros::battery::get_voltage() / nominalVoltage);
+    driveMultiplier *= batteryFactor;
+    subsystemMultiplier *= batteryFactor;
+    
+    // Temperature protection
+    checkTemperature();
+    
+    // Update velocities with smooth transitions
+    double targetDriveVel = driveBaseVelocity * driveMultiplier;
+    double targetSubsystemVel = subsystemBaseVelocity * subsystemMultiplier;
+    
+    // Smooth velocity transitions (exponential moving average)
+    currentDriveVelocity = currentDriveVelocity * 0.8 + targetDriveVel * 0.2;
+    currentSubsystemVelocity = currentSubsystemVelocity * 0.8 + targetSubsystemVel * 0.2;
+    
+    // Clamp to safe limits
+    currentDriveVelocity = std::clamp(currentDriveVelocity, 50.0, 600.0);
+    currentSubsystemVelocity = std::clamp(currentSubsystemVelocity, 20.0, 200.0);
+}
+
+void AdaptiveVelocityController::detectDemand() {
+    // Get controller inputs
+    double leftY = std::abs(controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)) / 127.0;
+    double rightX = std::abs(controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X)) / 127.0;
+    
+    // Check for high demand (aggressive driving)
+    double maxInput = std::max(leftY, rightX);
+    
+    // Hysteresis to prevent oscillation
+    if (maxInput > demandThreshold && !highDemandDetected) {
+        highDemandDetected = true;
+    } else if (maxInput < demandThreshold * 0.7 && highDemandDetected) {
+        highDemandDetected = false;
+    }
+}
+
+void AdaptiveVelocityController::compensateForBattery() {
+    double voltage = pros::battery::get_voltage();
+    
+    // Adjust base velocities based on battery level
+    if (voltage < minVoltage) {
+        // Emergency low battery mode
+        driveBaseVelocity = std::min(driveBaseVelocity, 200.0);
+        subsystemBaseVelocity = std::min(subsystemBaseVelocity, 50.0);
+    }
+}
+
+void AdaptiveVelocityController::checkTemperature() {
+    // Check all motor temperatures
+    double maxDriveTemp = std::max({
+        RightFront.get_temperature(),
+        RightBack.get_temperature(),
+        LeftFront.get_temperature(),
+        LeftBack.get_temperature()
+    });
+    
+    double maxSubsystemTemp = std::max({
+        chainHoist1.get_temperature(),
+        chainHoist2.get_temperature(),
+        chainHoist3.get_temperature()
+    });
+    
+    // Auto-switch to temperature limited mode if overheating
+    if (maxDriveTemp > tempReductionThreshold || maxSubsystemTemp > tempReductionThreshold) {
+        if (currentMode != TEMPERATURE_LIMITED) {
+            setMode(TEMPERATURE_LIMITED);
+            controller.print(2, 0, "TEMP LIMIT");
+        }
+    } else if (currentMode == TEMPERATURE_LIMITED) {
+        // Return to normal mode when cooled down
+        setMode(NORMAL);
+        controller.clear_line(2);
+    }
+}
+
+void AdaptiveVelocityController::setMode(VelocityMode mode) {
+    currentMode = mode;
+    
+    // Display mode on controller
+    switch (mode) {
+        case PRECISION:
+            controller.print(1, 0, "PRECISION");
+            break;
+        case SPORT:
+            controller.print(1, 0, "SPORT    ");
+            break;
+        case AUTONOMOUS:
+            controller.print(1, 0, "AUTO     ");
+            break;
+        case TEMPERATURE_LIMITED:
+            controller.print(1, 0, "TEMP LMT ");
+            break;
+        default:
+            controller.print(1, 0, "NORMAL   ");
+            break;
+    }
+}
+
+double AdaptiveVelocityController::getDriveVelocity() {
+    return currentDriveVelocity;
+}
+
+double AdaptiveVelocityController::getSubsystemVelocity() {
+    return currentSubsystemVelocity;
+}
