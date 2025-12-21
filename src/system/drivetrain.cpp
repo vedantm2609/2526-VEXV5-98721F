@@ -133,16 +133,22 @@ std::string drive::SwitchDrive(int driveMode) {
       drive::driveMode = CURVATURE_DRIVE;
       std::cout << "Curvature Drive" << std::endl;
       return "Curvature Drive";
+      controller.print(0, 0, "Curvature Drive");
+      pros::lcd::print(0, "Curvature Drive");
    case 1:
       drive::driveMode = ARCADE_DRIVE;
       std::cout << "Arcade Drive" << std::endl;
       return "Arcade Drive";
+      controller.print(0, 0, "Arcade Drive");
+      pros::lcd::print(0, "Arcade Drive");
    case 2:
       drive::driveMode = TANK_DRIVE;
       std::cout << "Tank Drive" << std::endl;
+      controller.print(0, 0, "Tank Drive");
       return "Tank Drive";
-   
-       default:
+      pros::lcd::print(0, "Tank Drive");
+
+   default:
       std::cout << "Not a valid drive control mode!" << std::endl;
       return "Not a valid driveMode!";
    }

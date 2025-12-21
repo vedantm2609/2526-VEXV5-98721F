@@ -1,104 +1,107 @@
 {
-    "py/object": "pros.conductor.project.Project",
-    "py/state": {
-        "project_name": "LemLib",
-        "target": "v5",
-        "templates": {
-            "LemLibTarball": {
-                "location": "/Users/sidmah/Library/Application Support/PROS/templates/LemLibTarball@0.5.0-rc.1",
-                "metadata": {
-                    "origin": "LemLibTarball"
-                },
-                "name": "LemLibTarball",
-                "py/object": "pros.conductor.templates.local_template.LocalTemplate",
-                "supported_kernels": "^4.1.1",
-                "system_files": [
-                    "static/my_lemlib_tarball_file.txt",
-                    "include/lemlib-tarball/api.hpp",
-                    "firmware/LemLibTarball.a"
-                ],
-                "target": "v5",
-                "user_files": [],
-                "version": "0.5.0-rc.1"
-            },
-            "kernel": {
-                "location": "/home/codespace/.config/pros/templates/kernel@4.2.1",
-                "metadata": {
-                    "cold_addr": "58720256",
-                    "cold_output": "bin/cold.package.bin",
-                    "hot_addr": "125829120",
-                    "hot_output": "bin/hot.package.bin",
-                    "origin": "pros-mainline",
-                    "output": "bin/monolith.bin"
-                },
-                "name": "kernel",
-                "py/object": "pros.conductor.templates.local_template.LocalTemplate",
-                "supported_kernels": null,
-                "system_files": [
-                    "include/pros/rotation.hpp",
-                    "include/pros/rotation.h",
-                    "include/pros/colors.hpp",
-                    "include/pros/llemu.h",
-                    "firmware/v5-common.ld",
-                    "include/pros/imu.h",
-                    "include/pros/vision.hpp",
-                    "include/pros/abstract_motor.hpp",
-                    "include/pros/misc.hpp",
-                    "include/pros/adi.hpp",
-                    "firmware/v5-hot.ld",
-                    "include/pros/screen.h",
-                    "include/pros/adi.h",
-                    "include/pros/ai_vision.hpp",
-                    "include/pros/gps.hpp",
-                    "include/pros/rtos.hpp",
-                    "include/pros/misc.h",
-                    "include/pros/colors.h",
-                    "include/pros/ai_vision.h",
-                    "include/pros/imu.hpp",
-                    "firmware/libpros.a",
-                    "include/pros/motors.hpp",
-                    "include/api.h",
-                    "common.mk",
-                    "include/pros/link.h",
-                    "include/pros/device.h",
-                    "include/pros/link.hpp",
-                    "include/pros/gps.h",
-                    "include/pros/motor_group.hpp",
-                    "include/pros/motors.h",
-                    "include/pros/ext_adi.h",
-                    "include/pros/optical.h",
-                    "include/pros/serial.h",
-                    "include/pros/distance.h",
-                    "include/pros/llemu.hpp",
-                    "include/pros/device.hpp",
-                    "include/pros/rtos.h",
-                    "firmware/libc.a",
-                    "include/pros/vision.h",
-                    "include/pros/screen.hpp",
-                    "include/pros/error.h",
-                    "include/pros/serial.hpp",
-                    "firmware/v5.ld",
-                    "include/pros/distance.hpp",
-                    "include/pros/apix.h",
-                    "firmware/libm.a",
-                    "include/pros/optical.hpp",
-                    "include/pros/version.h"
-                ],
-                "target": "v5",
-                "user_files": [
-                    ".gitignore",
-                    "src/main.cc",
-                    "src/main.c",
-                    "src/main.cpp",
-                    "Makefile",
-                    "include/main.hh",
-                    "include/main.hpp",
-                    "include/main.h"
-                ],
-                "version": "4.2.1"
-            }
+  "py/object": "pros.conductor.project.Project",
+  "py/state": {
+    "project_name": "LemLib",
+    "target": "v5",
+    "templates": {
+      "LemLibTarball": {
+        "location": "/Users/sidmah/Library/Application Support/PROS/templates/LemLibTarball@0.5.0-rc.1",
+        "metadata": {
+          "origin": "LemLibTarball"
         },
-        "upload_options": {},
-        "use_early_access": false
-    }
+        "name": "LemLibTarball",
+        "py/object": "pros.conductor.templates.local_template.LocalTemplate",
+        "supported_kernels": "^4.1.1",
+        "system_files": [
+          "static/my_lemlib_tarball_file.txt",
+          "include/lemlib-tarball/api.hpp",
+          "firmware/LemLibTarball.a"
+        ],
+        "target": "v5",
+        "user_files": [],
+        "version": "0.5.0-rc.1"
+      },
+      "kernel": {
+        "location": "/home/codespace/.config/pros/templates/kernel@4.2.1",
+        "metadata": {
+          "cold_addr": "58720256",
+          "cold_output": "bin/cold.package.bin",
+          "hot_addr": "125829120",
+          "hot_output": "bin/hot.package.bin",
+          "origin": "pros-mainline",
+          "output": "bin/monolith.bin"
+        },
+        "name": "kernel",
+        "py/object": "pros.conductor.templates.local_template.LocalTemplate",
+        "supported_kernels": null,
+        "system_files": [
+          "include/pros/rotation.hpp",
+          "include/pros/rotation.h",
+          "include/pros/colors.hpp",
+          "include/pros/llemu.h",
+          "firmware/v5-common.ld",
+          "include/pros/imu.h",
+          "include/pros/vision.hpp",
+          "include/pros/abstract_motor.hpp",
+          "include/pros/misc.hpp",
+          "include/pros/adi.hpp",
+          "firmware/v5-hot.ld",
+          "include/pros/screen.h",
+          "include/pros/adi.h",
+          "include/pros/ai_vision.hpp",
+          "include/pros/gps.hpp",
+          "include/pros/rtos.hpp",
+          "include/pros/misc.h",
+          "include/pros/colors.h",
+          "include/pros/ai_vision.h",
+          "include/pros/imu.hpp",
+          "firmware/libpros.a",
+          "include/pros/motors.hpp",
+          "include/api.h",
+          "common.mk",
+          "include/pros/link.h",
+          "include/pros/device.h",
+          "include/pros/link.hpp",
+          "include/pros/gps.h",
+          "include/pros/motor_group.hpp",
+          "include/pros/motors.h",
+          "include/pros/ext_adi.h",
+          "include/pros/optical.h",
+          "include/pros/serial.h",
+          "include/pros/distance.h",
+          "include/pros/llemu.hpp",
+          "include/pros/device.hpp",
+          "include/pros/rtos.h",
+          "firmware/libc.a",
+          "include/pros/vision.h",
+          "include/pros/screen.hpp",
+          "include/pros/error.h",
+          "include/pros/serial.hpp",
+          "firmware/v5.ld",
+          "include/pros/distance.hpp",
+          "include/pros/apix.h",
+          "firmware/libm.a",
+          "include/pros/optical.hpp",
+          "include/pros/version.h"
+        ],
+        "target": "v5",
+        "user_files": [
+          ".gitignore",
+          "src/main.cc",
+          "src/main.c",
+          "src/main.cpp",
+          "Makefile",
+          "include/main.hh",
+          "include/main.hpp",
+          "include/main.h"
+        ],
+        "version": "4.2.1"
+      }
+    },
+    "upload_options": {
+      "slot": 5,
+      "icon": "alien"
+    },
+    "use_early_access": false
+  }
 }

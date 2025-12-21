@@ -10,6 +10,7 @@
 #include "pros/imu.hpp"
 #include "globals.h"
 #include "pros/rotation.hpp"
+#include "robot/autonomous.h"
 #include "robot/drivetrain.h"
 #include "robot/subsystems.h"
 #include <cmath>
@@ -21,6 +22,7 @@ using namespace robot::globals;
 struct robotSubsystems {
     robot::Subsystems subsystems;
     robot::drive drive;
+    robot::autonomous autonomous;
 } subsystem;
 
 void initialize() {
@@ -41,10 +43,13 @@ void initialize() {
 void disabled() {
     subsystem.drive.disabled();
     subsystem.subsystems.stop();
+    subsystem.autonomous.disabled();
 }
 
 void autonomous() {
     chassis.tank(0, 0);
+    subsystem.autonomous.blueLeft();
+
 }
 void opcontrol() {
     while (true) {

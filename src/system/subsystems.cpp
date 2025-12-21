@@ -11,8 +11,6 @@ using namespace robot;
 
 #define delayTime 10
 
-// Static member to track pneumatic state
-static bool isExtended = false;
 // Static variables for boost function
 static int boostLevel = 0; // 0 = normal, 1 = medium boost, 2 = max boost
 static bool l1WasPressed = false;
@@ -24,10 +22,8 @@ void robot::Subsystems::initialize() {
     
     
     // Set initial pneumatic states
-    helperIntake1.retract();
-    helperIntake2.retract();
-    flapPneumatic.retract();
-    isExtended = false;
+    descore.retract();
+    matchLoader.retract();
     
     // Stop all motors initially
     chainHoist1.move_voltage(0);
@@ -92,6 +88,8 @@ void robot::Subsystems::start() {
     bool r2 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
     bool x = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
     bool b = controller.get_digital(pros::E_CONTROLLER_DIGITAL_B);
+    bool a = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A);
+
 
 
     printf("[CHAINHOIST] Button states - L1:%d L2:%d R1:%d R2:%d\n", l2, r1, r2);
@@ -132,7 +130,8 @@ void robot::Subsystems::start() {
         chainHoist2.move_voltage(negativeVoltageInt);
         chainHoist3.move_voltage(negativeVoltageInt);
         printf("[CHAINHOIST] Motors set - ChainHoist: %d mV\n", negativeVoltageInt);
-    }else {
+
+    } else if (a){
         printf("[CHAINHOIST] NO BUTTONS PRESSED - Stopping all motors\n");
         Subsystems::stop();
         printf("[CHAINHOIST] All motors stopped (voltage = 0)\n");

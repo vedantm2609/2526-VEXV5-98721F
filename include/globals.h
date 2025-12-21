@@ -31,9 +31,8 @@ extern pros::Motor LeftMiddle;
 extern pros::MotorGroup driveRight;
 extern pros::MotorGroup driveLeft;
 
-extern pros::adi::Pneumatics helperIntake1; 
-extern pros::adi::Pneumatics helperIntake2; 
-extern pros::adi::Pneumatics flapPneumatic;
+extern pros::adi::Pneumatics descore;
+extern pros::adi::Pneumatics matchLoader;
 
 extern pros::Motor chainHoist1;
 extern pros::Motor chainHoist2;
