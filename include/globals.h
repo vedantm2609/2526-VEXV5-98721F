@@ -23,6 +23,8 @@ extern pros::Motor RightFront;
 extern pros::Motor RightBack;
 extern pros::Motor LeftFront;
 extern pros::Motor LeftBack;
+extern pros::Motor RightMiddle;
+extern pros::Motor LeftMiddle;
 
 // Function to initialize motor brake modes
 

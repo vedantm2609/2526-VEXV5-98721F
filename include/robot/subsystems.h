@@ -1,4 +1,5 @@
 #pragma once
+#include "pros/rtos.hpp"
 #include <string>
     
 
@@ -40,7 +41,7 @@ namespace robot {
          * This function updates the state of all the subsystems of the robot.
          * It should be called periodically in the main control loop.
          */
-        void update();
+        pros::Task update();
 
         /**
          * @brief Stops all robot subsystems.
@@ -60,10 +61,6 @@ namespace robot {
          */
         
         void start();
-
-        void boost();
-
-
 
         void run();
         

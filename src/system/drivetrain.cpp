@@ -1,5 +1,6 @@
 #include "robot/drivetrain.h"
 #include "globals.h"
+#include "pros/motors.h"
 #include <cmath>
 #define DEFAULT_DELAY_LENGTH 15
 
@@ -47,9 +48,9 @@ void drive::initializeMotors() {
     LeftFront.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
     LeftBack.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
     
-    chainHoist1.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    chainHoist2.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    chainHoist3.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    chainHoist1.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    chainHoist2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    chainHoist3.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     
     std::cout << "Motor brake modes initialized" << std::endl;
 }
@@ -94,10 +95,10 @@ void drive::ArcadeDrive() {
 
 void drive::CurvatureDrive() {
    // get joystick positions
-   int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-   int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+   int throttle = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+   int turn = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
    // move the chassis with curvature controls
-   chassis.curvature(leftY, rightX);
+   chassis.curvature(throttle, turn, false);
    // delay to save resources
    pros::delay(25);
 }

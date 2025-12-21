@@ -41,7 +41,7 @@ void robot::Subsystems::initialize() {
     printf("[SUBSYSTEMS] Ready for operation\n");
 }
 
-void robot::Subsystems::update() {
+pros::Task robot::Subsystems::update() {
     // This function can be used for periodic updates of subsystem states
     // For now, it's mainly used for monitoring and diagnostics
     
@@ -87,15 +87,18 @@ void robot::Subsystems::stop() {
 
 void robot::Subsystems::start() {
     // Get controller inputs
-    bool l1 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1);
     bool l2 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2);
     bool r1 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
     bool r2 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
+    bool x = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
+    bool b = controller.get_digital(pros::E_CONTROLLER_DIGITAL_B);
 
-    printf("[CHAINHOIST] Button states - L1:%d L2:%d R1:%d R2:%d\n", l1, l2, r1, r2);
+
+    printf("[CHAINHOIST] Button states - L1:%d L2:%d R1:%d R2:%d\n", l2, r1, r2);
 
     // Calculate voltage values based on regularVoltage
     int voltageInt = (int)regularVoltage;
+    int negativeVoltageInt = -voltageInt;
 
     // Only move if buttons are actually pressed (prevents drift)
     if (r1) {
@@ -117,63 +120,32 @@ void robot::Subsystems::start() {
         printf("[CHAINHOIST] L2 PRESSED - Custom mode\n");
         chainHoist1.move_voltage(voltageInt);
         printf("[CHAINHOIST] Motors set - ChainHoist1: %d mV\n", voltageInt);
-    } else {
+    
+    } else if (x) {
+        printf("[CHAINHOIST] X PRESSED - Intake Only\n");
+        chainHoist1.move_voltage(-voltageInt);
+        printf("[CHAINHOIST] Motors set - ChainHoist1: %d mV\n", voltageInt);
+
+    } else if (b) {
+        printf("[CHAINHOIST] B PRESSED - Stall\n");
+        chainHoist1.move_voltage(negativeVoltageInt);
+        chainHoist2.move_voltage(negativeVoltageInt);
+        chainHoist3.move_voltage(negativeVoltageInt);
+        printf("[CHAINHOIST] Motors set - ChainHoist: %d mV\n", negativeVoltageInt);
+    }else {
         printf("[CHAINHOIST] NO BUTTONS PRESSED - Stopping all motors\n");
         Subsystems::stop();
         printf("[CHAINHOIST] All motors stopped (voltage = 0)\n");
     }
 
-    // Pneumatic control debugging
-    //if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-        //isExtended = !isExtended;
-        //printf("[CHAINHOIST] A BUTTON NEW PRESS - Pneumatic toggle to: %s\n", isExtended ? "EXTENDED" : "RETRACTED");
-
-        //if(isExtended) {
-            //helperIntake1.extend();
-            //helperIntake2.extend();
-            //printf("[CHAINHOIST] Pneumatics EXTENDED\n");
-        //} else {
-            //helperIntake1.retract();
-            //helperIntake2.retract();
-            //printf("[CHAINHOIST] Pneumatics RETRACTED\n");
-        //}
 
 }
 
-void robot::Subsystems::boost() {
-    // Check if L1 is currently pressed
-    bool l1IsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1);
-    
-    // Detect rising edge (button just pressed)
-    if (l1IsPressed && !l1WasPressed) {
-        // Cycle through boost levels
-        boostLevel = (boostLevel + 1) % 3;
-        
-        switch (boostLevel) {
-            case 0:
-                regularVoltage = 111.01;
-                printf("[BOOST] Reset to normal voltage: %.2f\n", regularVoltage);
-                break;
-            case 1:
-                regularVoltage = 120.0;
-                printf("[BOOST] Increased to medium boost: %.2f\n", regularVoltage);
-                break;
-            case 2:
-                regularVoltage = 127.0;
-                printf("[BOOST] Increased to maximum boost: %.2f\n", regularVoltage);
-                break;
-        }
-    }
-    
-    // Update previous button state
-    l1WasPressed = l1IsPressed;
-}
 
 void robot::Subsystems::run() {
     // REMOVED the infinite while(true) loop - let main.cpp handle the timing
     pros::delay(delayTime);
     start();
-    boost();
 
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
         while(true) {

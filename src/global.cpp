@@ -21,12 +21,12 @@ namespace robot {
 namespace globals {
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-    pros::Motor RightFront(1, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
-    pros::Motor RightBack(2, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
-    pros::Motor LeftFront(-3, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
-    pros::Motor LeftBack(-4, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
-    pros::Motor RightMiddle(5, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
-    pros::Motor LeftMiddle(-6, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+    pros::Motor RightFront(4, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+    pros::Motor RightBack(3, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+    pros::Motor LeftFront(5, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+    pros::Motor LeftBack(-6, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+    pros::Motor RightMiddle(-2, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+    pros::Motor LeftMiddle(-1, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
     // Set brake modes to prevent coasting/drift
    
     pros::MotorGroup driveRight({RightFront.get_port(), RightBack.get_port(), RightMiddle.get_port()}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::rotations);
@@ -40,9 +40,9 @@ namespace globals {
     // ChainHoist1 is the motor that is required for all instances
     // ChainHoist3 is the motor that spins counterclockwise for middle and clockwise for higher
 
-    pros::Motor chainHoist1(12  , pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
-    pros::Motor chainHoist2(18, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
-    pros::Motor chainHoist3(6, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
+    pros::Motor chainHoist1(7  , pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
+    pros::Motor chainHoist2(8, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
+    pros::Motor chainHoist3(9   , pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
 // Fixed motor group to only include motors that are actually defined
     pros::MotorGroup chainHoistMotors({12, 18, 6}, pros::v5::MotorGears ::green, pros::v5::MotorUnits::degrees);
 
@@ -59,9 +59,9 @@ namespace globals {
 
    
     
-    pros::Rotation horizontalRotation(10);
-    pros::Rotation verticalRotation(19);
-    pros::Imu mainIMU(7); // Port 
+    pros::Rotation horizontalRotation(20);
+    pros::Rotation verticalRotation(-11);
+    pros::Imu mainIMU(10); // Port 
     pros::AIVision imComingForU(13); // AI vision sensor
     lemlib::TrackingWheel horizontal_tracking_wheel(&horizontalRotation, 2.75, 7.25, 0); // (rotation sensor, wheel diameter, distance from center
     lemlib::TrackingWheel vertical_tracking_wheel(&verticalRotation, 2.75, -7.25, 90); // (rotation sensor, wheel diameter, distance from center, angle offset)

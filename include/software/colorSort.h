@@ -18,14 +18,22 @@ namespace robot {
              * @param colors An array of color values to be sorted.
              * @return A sorted array of color values.
              */
-            static void initialize();
+            void initialize();
 
-            static void sortColors();
+            void runSortColor();
 
-            static void stopSort();
+            void runSortObject();
+
+            void stopSort();
+            
+            void resetValues();
 
     private:
             static bool isSorting;
+
+            static uint32_t lastDetectionTime;
+
+            static int lastObjectId;
 
             
     };
