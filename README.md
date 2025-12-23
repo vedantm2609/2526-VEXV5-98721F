@@ -1,72 +1,231 @@
-<img src="docs/assets/LemLib_Banner_V3.png">
-<p align="center">
-    <img src="https://img.shields.io/github/contributors/LemLib/LemLib?style=for-the-badge">
-    <img src="https://img.shields.io/github/stars/LemLib/LemLib?style=for-the-badge">
-    <img src="https://img.shields.io/github/downloads/LemLib/LemLib/total?style=for-the-badge">
-    <img src="https://img.shields.io/github/actions/workflow/status/LemLib/LemLib/pros-build.yml?style=for-the-badge">
-    <img src="https://img.shields.io/badge/version-v0.5.2-blue?style=for-the-badge">
-</p>
-<hr>
-Welcome to LemLib! This open-source PROS template aims to introduce common algorithms like Pure Pursuit and Odometry for new and experienced teams alike.
+# 98721F Robot - Hardware and Sofware System Code
 
-The creation of this template was inspired by [EZ-Template](https://github.com/EZ-Robotics/EZ-Template) and [OkapiLib](https://github.com/OkapiLib/OkapiLib). We aim to develop a library that strikes a balance between ease-of-use, akin to that of EZ-Template, and comprehensive functionality, similar to that of OkapiLib.
+This code file is the official code ran on the 98721F robot. It includes all robot configurations for the mechanisms and systems ran on the robot.
+Multiple code files are being used for autonomous routes, as one autonomous path is only being used on each project. 
 
-> Want a place to chat with the devs and other users? Join our [Discord server](https://discord.gg/pCHr7XZUTj).
+## Robot Hardware Configuration
 
-## License
-This project is licensed under the MIT license. Check [LICENSE](https://github.com/LemLib/LemLib/blob/master/LICENSE) for more details.
+### Drivetrain
 
-## Features
-- Generic PID class
-- Odometry
-- Odom turn to face point
-- [Boomerang controller](https://www.desmos.com/calculator/sptjw5szex)
-- Pure Pursuit
-- Motion Chaining
-- Driver Control
+The Drivetrain is the driving base of the robot. It allows for the functioning of moving around the field. All design choices have been made to driver preferance and matchup goals. 
+- **Wheels**: 4 Omniwheel + 2 Traction wheels (3.25" diameter)
+- **Motors**: 6 VEX 11W Smart Motors with blue cartridges (600 RPM)
+- **Drive Modes**: Supports Arcade, Curvature, and Tank drive
+- **No deadzone implementation** for maximum sensitivity
 
-## Example Project
-You can find a fully annotated example project [here](https://github.com/LemLib/LemLib/blob/stable/src/main.cpp).
+### Chain Hoist System
+- **3 Motors** for multi-level lifting mechanism:
+  - `chainHoist1` (Port 12): Primary hoist motor
+  - `chainHoist2` (Port 18): Secondary hoist motor  
+  - `chainHoist3` (Port 6): Directional control motor
+  - `chainHoist1` is a full 11W VEX Smart Motor
+  - `chainHoist2` and `chainHoist3 ` are each 5.5W VEX Smart Motors
+ 
+- The Chain Hoist is able to move blocks from the ground to the desired scoring position at ease due to it's simplicity and structure. 
 
-## Tutorials
-The [tutorials](https://lemlib.readthedocs.io/en/v0.5.0/tutorials/1_getting_started.html) provide a detailed walkthrough through all the features of LemLib. It covers everything from installation to Path Following:
 
-## FAQ
-_**1. Help! Why is my controller vibrating?**_
-If your controller vibrated more than once, your inertial sensor calibration failed.
-Check if its connected to the right port and try again.
 
-_**2. What drivetrains are supported?**_
-Only tank/differential.
-This is not going to change until other drivetrains are competitive.
+### Sensors
 
-_**3. Do I need tracking wheels?**_
-No, but it is recommended.
-You should absolutely have a horizontal tracking wheel if you don't have traction wheels, and you have to spend extra effort tuning your movements to prevent any wheel slip.
+The sensors used on the robot are to accomplish two goals as follows:
+  - Have a comprehensive Odometry system that can track and follow the position of the robot. (**accomplished by the IMU, Horizontal and Vertical Rotation sensor**)
+  - Have a color sorting system to sort out unwanted blocks (opposite alliance) to maximize scoring and efficiency. (**AI Vision Sensor**)
 
-_**4. Do I need an inertial sensor?**_
-No, but it is highly recommended.
-The one exception to this would be if you have 2 parallel tracking wheels which are tuned well and are perfectly square. LemLib will work without it, but the accuracy will be compromised. 
+Port Numbers:
+  - **IMU** on Port 7 for heading tracking
+  - **Horizontal rotation sensor** (Port 10) 
+  - **Vertical rotation sensor** (Port 19)
+  - **AI Vision sensor** (Port 13)
 
-_**5. Do I need an SD card?**_
-As of v0.5.0, no SD card is necessary.
+## Control Scheme
 
-_**6. What are the units?**_
-The units are inches and degrees.
-In a future release, Qunits will be used so you can use whatever units you like.
+### Drive Controls
+| Input | Function |
+|-------|----------|
+| **Left Stick Y** | Forward/Backward movement |
+| **Right Stick X** | Turning/Steering |
+| **Left Arrow (D-Pad)** | Cycle through drive modes |
 
-_**7. Is LemLib V5RC legal?**_
-Yes.
-Per the RECF student-centred policy, in the context of third-party libraries.
-> Students should be able to understand and explain the code used on their robots
+### Drive Modes
+1. **Curvature Drive** (Default) - Smooth curved turning
+2. **Arcade Drive** - Traditional arcade-style controls
+3. **Tank Drive** - Independent left/right side control
 
-In other words, you need to know how LemLib works. You don't need to know the details like all the math, just more or less how the algorithm works. If you want to learn more about LemLib, you can look through the documentation and ask questions on our Discord server.
+### Subsystem Controls
+| Button | Function |
+|--------|----------|
+| **L1** | Toggle boost levels (Normal → Medium → Max → Normal) |
+| **L2** | Chain hoist custom mode (chainHoist1 only) |
+| **R1** | Top rack mode (all motors reverse) |
+| **R2** | Middle rack mode (chainHoist1,2 reverse, chainHoist3 forward) |
+| **Y** | Enter diagnostic/update loop |
 
-## Documentation
-Check out the [Documentation](https://lemlib.readthedocs.io/en/v0.5.0/index.html).
+### Boost Levels
+- **Level 0**: Normal voltage (111.01V)
+- **Level 1**: Medium boost (120.0V) 
+- **Level 2**: Maximum boost (127.0V)
 
-## Contributing
-Want to contribute? Please read [CONTRIBUTING.md](https://github.com/LemLib/LemLib/blob/master/.github/CONTRIBUTING.md) and join our [Discord server](https://discord.gg/pCHr7XZUTj).
+## Code Structure & Modification Guide
 
-## Code of Conduct
-See the [Code of Conduct](https://github.com/LemLib/LemLib/blob/master/.github/CODE_OF_CONDUCT.md) on how to behave like an adult.
+### Core Files
+
+#### [`main.cpp`](src/main.cpp)
+**Purpose**: Main program entry point and robot lifecycle management
+**Functions**:
+- `initialize()`: Sets up chassis calibration and subsystem initialization
+- `autonomous()`: Autonomous period control
+- `opcontrol()`: Driver control period with main control loop
+- `disabled()`: Safely stops all systems when disabled
+
+**To Modify**:
+- **Button bindings**: Change controller mappings in `opcontrol()` function
+- **Initialization sequence**: Modify `initialize()` to change startup behavior
+- **Autonomous routines**: Edit `autonomous()` for competition autonomous code
+- **Main control loop timing**: Adjust `pros::delay(20)` value in `opcontrol()`
+
+#### Hardware Configuration: [`globals.h`](include/globals.h) / [`global.cpp`](src/global.cpp)
+**Purpose**: All hardware definitions, port assignments, and configurations
+
+**To Modify Motor Configuration**:
+```cpp
+// In global.cpp - Change motor ports and settings
+pros::Motor RightFront(2, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+pros::Motor chainHoist1(12, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
+```
+
+**To Modify Sensor Configuration**:
+```cpp
+// In global.cpp - Change sensor ports
+pros::Imu mainIMU(7); // Change port number
+pros::Rotation horizontalRotation(10); // Change port number
+```
+
+**To Modify LemLib Settings**:
+```cpp
+// In global.cpp - Adjust PID values and drive curves
+lemlib::ControllerSettings lateral_controller(10, 0, 3, 3, 1, 100, 3, 500, 20);
+```
+
+#### Drivetrain Control: [`drivetrain.h`](include/robot/drivetrain.h) / [`drivetrain.cpp`](src/system/drivetrain.cpp)
+**Purpose**: All drivetrain movement and control logic
+
+**To Modify Drive Modes**:
+- **Add new drive mode**: Add to `DRIVE_MODE` enum in `drivetrain.h`, implement function in `drivetrain.cpp`
+- **Change drive sensitivity**: Modify drive functions `ArcadeDrive()`, `TankDrive()`, `CurvatureDrive()`
+- **Adjust control curves**: Edit arcade drive parameters in `ArcadeDrive()` function
+- **Change default drive mode**: Modify `driveMode` initialization in `initialize()`
+
+**To Modify Drive Switching**:
+```cpp
+// In drivetrain.cpp - Edit SwitchDrive() function to change mode names/behavior
+std::string drive::SwitchDrive(int driveMode) {
+    switch (driveMode) {
+    case 0: // Modify this case for different default mode
+        drive::driveMode = CURVATURE_DRIVE;
+```
+
+#### Subsystem Control: [`subsystems.h`](include/robot/subsystems.h) / [`subsystems.cpp`](src/system/subsystems.cpp)
+**Purpose**: All non-drivetrain mechanisms (chain hoist, pneumatics, etc.)
+
+**To Modify Chain Hoist Control**:
+```cpp
+// In subsystems.cpp - Edit start() function button mappings
+if (r1) {
+    // Change motor directions and voltages here
+    chainHoist1.move_voltage(-voltageInt);
+}
+```
+
+**To Modify Pneumatic Control**:
+```cpp
+// In subsystems.cpp - Edit pneumatic logic in start() function
+// Currently commented out - uncomment and modify as needed
+```
+
+**To Modify Boost System**:
+```cpp
+// In subsystems.cpp - Edit boost() function voltage levels
+case 1:
+    regularVoltage = 120.0; // Change boost voltage here
+```
+
+**To Add New Subsystem Functions**:
+1. Declare function in `subsystems.h`
+2. Implement in `subsystems.cpp`
+3. Call from `run()` function or add button binding in `start()`
+
+## Customization Examples
+
+### Adding a New Motor
+1. **Hardware Definition** (`global.cpp`):
+```cpp
+pros::Motor newMotor(PORT_NUMBER, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
+```
+
+2. **Header Declaration** (`globals.h`):
+```cpp
+extern pros::Motor newMotor;
+```
+
+3. **Initialize in Subsystems** (`subsystems.cpp`):
+```cpp
+void robot::Subsystems::initialize() {
+    // Add motor initialization
+    newMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+}
+```
+
+### Adding a New Button Control
+1. **In main.cpp** (`opcontrol()` function):
+```cpp
+if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+    // Call your function here
+    subsystem.subsystems.yourNewFunction();
+}
+```
+
+### Changing Drive Mode Cycle Order
+1. **In drivetrain.cpp** (`SwitchDrive()` function):
+```cpp
+// Reorder or change the case numbers to modify cycle order
+case 0: drive::driveMode = TANK_DRIVE; // Changed from CURVATURE_DRIVE
+```
+
+### Modifying PID Values
+1. **In global.cpp** (Controller Settings):
+```cpp
+lemlib::ControllerSettings lateral_controller(
+    15, // kP - increase for faster response
+    0.1, // kI - add for steady-state error correction
+    5,  // kD - increase for less overshoot
+    // ... other parameters
+);
+```
+
+## File Organization Summary
+
+| Want to Change | Edit These Files |
+|----------------|------------------|
+| **Motor ports/hardware** | `globals.h`, `global.cpp` |
+| **Button mappings** | `main.cpp` (opcontrol function) |
+| **Drive behavior** | `drivetrain.h`, `drivetrain.cpp` |
+| **Subsystem mechanisms** | `subsystems.h`, `subsystems.cpp` |
+| **PID/LemLib settings** | `global.cpp` |
+| **Initialization sequence** | `main.cpp` (initialize function) |
+| **Autonomous routines** | `main.cpp` (autonomous function) |
+| **Main control loop** | `main.cpp` (opcontrol function) |
+
+## Development Notes
+
+### Dependencies
+- **PROS**: VEX V5 development environment
+- **LemLib**: Advanced chassis control library
+- **Standard C++ libraries**: For string handling and math operations
+
+### Performance Considerations
+- 20ms main loop delay for stable operation
+- Temperature monitoring prevents motor damage
+- Efficient memory usage with static variables
+- Proper resource cleanup in disabled state
+
+This system provides a robust foundation for competitive VEX robotics with advanced features for precise control and monitoring.
