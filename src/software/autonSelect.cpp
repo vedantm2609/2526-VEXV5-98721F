@@ -5,5 +5,3 @@
 #include "/Users/sidmah/Downloads/LemLib-stable-5/include/robot/subsystems.h"
 
 using namespace software;
-
-void software::autonSelect blueLeft() {}

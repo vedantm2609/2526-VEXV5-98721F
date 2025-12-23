@@ -86,6 +86,7 @@ void robot::Subsystems::start() {
     bool l2 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2);
     bool r1 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
     bool r2 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
+    bool l1 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1);
     bool x = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
     bool b = controller.get_digital(pros::E_CONTROLLER_DIGITAL_B);
     bool a = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A);
@@ -94,7 +95,7 @@ void robot::Subsystems::start() {
 
     printf("[CHAINHOIST] Button states - L1:%d L2:%d R1:%d R2:%d\n", l2, r1, r2);
 
-    // Calculate voltage values based on regularVoltage
+    // Calculate voltage values based on regularVoltag 
     int voltageInt = (int)regularVoltage;
     int negativeVoltageInt = -voltageInt;
 
@@ -131,18 +132,16 @@ void robot::Subsystems::start() {
         chainHoist3.move_voltage(negativeVoltageInt);
         printf("[CHAINHOIST] Motors set - ChainHoist: %d mV\n", negativeVoltageInt);
 
-    } else if (a){
-        printf("[CHAINHOIST] NO BUTTONS PRESSED - Stopping all motors\n");
-        Subsystems::stop();
-        printf("[CHAINHOIST] All motors stopped (voltage = 0)\n");
+    } else if (a) {
+        printf("[CHAINHOIST] A PRESSED - Descoring\n");
+        descore.extend();
+        printf("[DESCORE] Pneumatic extended\n");
+
     }
-
-
 }
 
 
 void robot::Subsystems::run() {
-    // REMOVED the infinite while(true) loop - let main.cpp handle the timing
     pros::delay(delayTime);
     start();
 
